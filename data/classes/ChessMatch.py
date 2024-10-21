@@ -1,5 +1,4 @@
 import pygame
-
 from data.classes.Board import Board
 from data.classes.agents.ChessAgent import ChessAgent
 
@@ -17,20 +16,28 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
     # Run the main game loop
     running = True
     while running:
+        print(f"Current Turn: {board.turn}")  # Debug: Show current turn
         chosen_action = agents[i].choose_action(board)
-        i = (i + 1) % len(agents)
-        moves_count += 1
-        if chosen_action == False or moves_count > 1000:
+
+        if chosen_action is False or moves_count > 1000:
             print('Players draw!')
             running = False
-        elif not board.handle_move(*chosen_action):
-            print("Invalid move!")
-        elif board.is_in_checkmate(board.turn):
-            if board.turn == 'white':
-                print('Black wins!')
+        else:
+            print("Chosen action:", chosen_action[0].pos, chosen_action[1].pos)  # Debug: Show chosen action
+            # Check if the move is valid before applying it
+            if board.handle_move(*chosen_action):
+                moves_count += 1
+                i = (i + 1) % len(agents)  # Switch turns only on valid move
+                # Check for checkmate after a valid move
+                if board.is_in_checkmate(board.turn):
+                    if board.turn == 'white':
+                        print('Black wins!')
+                    else:
+                        print('White wins!')
+                    running = False
             else:
-                print('White wins!')
-            running = False
+                print("Invalid move!")  # Notify about invalid moves
+                break
         board.draw()
 
     # Allow the player to view the result

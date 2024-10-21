@@ -90,11 +90,12 @@ class Board:
                         )
 
     def handle_move(self, from_square: Square, to_square: Square) -> bool:
-        if from_square is not None and from_square.occupying_piece.move(self, to_square):
-            self.turn = 'white' if self.turn == 'black' else 'black'
-            return True
-        else:
-            return False
+        if from_square.occupying_piece is not None:
+            if from_square.occupying_piece.move(self, to_square):
+                self.turn = 'white' if self.turn == 'black' else 'black'
+                return True
+        
+        return False
 
     # check state checker
     def is_in_check(self, color: Literal['white', 'black'],

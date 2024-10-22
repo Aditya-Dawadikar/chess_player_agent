@@ -6,6 +6,21 @@ from data.classes.Simulation import SimulationBoard, SimulationSquare
 from data.classes.Square import Square
 import random
 
+color_code = {
+            "black": "b",
+            "white": "w"
+        }
+
+point_map = {
+            " ": 0,
+            "P": 1,
+            "N": 3,
+            "B": 3,
+            "R": 5,
+            "Q": 9,
+            "K": "INF"
+        }
+
 class MinimaxPlayer(ChessAgent):
     @staticmethod
     def translate_simulation_square_to_square(sim_square: SimulationSquare, board: Board) -> Square:
@@ -74,23 +89,32 @@ class MinimaxPlayer(ChessAgent):
         return score
 
     def get_all_possible_moves(self, board: SimulationBoard, color: str):
-        color_code = {
-            "black": "b",
-            "white": "w"
-        }
-
-        point_map = {
-            " ": 0,
-            "P": 1,
-            "N": 3,
-            "B": 3,
-            "R": 5,
-            "Q": 9,
-            "K": "INF"
-        }
-        
         possible_moves = []
 
+        checkmate_status = self.is_in_checkmate(board, color)
+        check_status,threat_piece = self.is_in_check(board,color)
+
+        # check if board is in checkmate
+        if checkmate_status:
+            return []
+        elif check_status:
+            # Case 1: No other Piece can capture the threatening piece
+            # Case 2: Other piece can capture the threatening piece
+
+            #TODO: Current limitation is that when king is under check
+            # and any other piece can capture the threatening piece or
+            # block it from directly attacking the King, it is not detected
+            # instead the King tries to save himself by moving
+            # which also leads to Invalid moves in certain cases
+
+            king_defenses = self.exit_check_with_king_move(board, color)
+            other_defenses = self.exit_check_with_piece_move(board, color, threat_piece)
+
+            defenses = king_defenses
+            defenses.extend(other_defenses)
+            return defenses
+
+        # general case
         for square in board.squares:
             if square.occupying_piece is not None:
                 if square.occupying_piece.notation != ' ':
@@ -121,7 +145,6 @@ class MinimaxPlayer(ChessAgent):
                                 "can_capture":can_capture,
                                 "points": points
                             })
-        # print(possible_moves)
         return possible_moves
 
     def get_opponent_color(self):
@@ -162,3 +185,150 @@ class MinimaxPlayer(ChessAgent):
                 if beta <= alpha:
                     break  # Alpha cut-off
             return min_eval
+
+    def is_in_check(self, board: SimulationBoard, color: str) -> bool:
+        """
+        Returns True if the player with the given color is in check.
+        """
+        king_square = None
+        for square in board.squares:
+            if square.occupying_piece and \
+                square.occupying_piece.color == color and \
+                    square.occupying_piece.notation == 'K':
+                king_square = square
+                break
+
+        if king_square:
+            # Check if any opposing piece can move to the king's position
+            opponent_color = self.get_opponent_color() if color == self.color else self.color
+            for square in board.squares:
+                if square.occupying_piece and square.occupying_piece.color == opponent_color:
+                    valid_moves = square.occupying_piece.get_valid_moves(board)
+                    if king_square in valid_moves:
+                        return True, square
+        return False, None
+
+    def is_in_checkmate(self, board: SimulationBoard, color: str) -> bool:
+        """
+        Returns True if the player with the given color is in checkmate.
+        """
+        is_checked = False
+        king_square = None
+        for square in board.squares:
+            if square.occupying_piece and \
+                square.occupying_piece.color == color and \
+                    square.occupying_piece.notation == 'K':
+                king_square = square
+                break
+
+        if king_square:
+            # Check if any opposing piece can move to the king's position
+            opponent_color = self.get_opponent_color() if color == self.color else self.color
+            for square in board.squares:
+                if square.occupying_piece and square.occupying_piece.color == opponent_color:
+                    valid_moves = square.occupying_piece.get_valid_moves(board)
+                    if king_square in valid_moves:
+                        is_checked = True
+        
+        if is_checked == False:
+            return False
+    
+        # return safe moves
+        safe_moves = []
+
+        king_square = self.get_king(board, color)
+        kings_moves = king_square.occupying_piece.get_valid_moves(board)
+
+
+        all_opponent_moves = []
+        for square in board.squares:
+            if square.occupying_piece is not None:
+                if square.occupying_piece.color != color:
+                    # look for opponent pieces only
+                    all_opponent_moves.append(square.occupying_piece.get_valid_moves(board))
+
+        for move in kings_moves:
+            if move not in all_opponent_moves:
+                safe_moves.append(move)
+
+        if len(safe_moves)==0:
+            return True
+        return False
+
+    def get_king(self, board: SimulationBoard, color):
+        for square in board.squares:
+            if square.occupying_piece is not None:
+                if square.occupying_piece.notation == 'K' and \
+                    square.occupying_piece.color == color:
+                    return square
+    
+    def exit_check_with_king_move(self, board: SimulationBoard, color):
+            safe_moves = []
+
+            king_square = self.get_king(board, color)
+            kings_moves = king_square.occupying_piece.get_valid_moves(board)
+
+            all_opponent_moves = []
+            for square in board.squares:
+                if square.occupying_piece is not None:
+                    if square.occupying_piece.color != color:
+                        # look for opponent pieces only
+                        moves_list = square.occupying_piece.get_valid_moves(board)
+                        all_opponent_moves.extend(moves_list)
+
+            for move in kings_moves:
+                if move not in all_opponent_moves:
+                    can_capture = False
+                    points = point_map[" "]
+
+                    # check if the move leads to any captures
+                    if move.occupying_piece is not None:
+                        if move.occupying_piece.color != self.color:
+                            can_capture = True
+                            points = point_map[move.occupying_piece.notation]
+
+                    safe_moves.append({
+                                "start":king_square,
+                                "curr_pos": king_square.pos,
+                                "curr_piece_color": color_code[king_square.occupying_piece.color] if king_square.occupying_piece else None,
+                                "curr_piece_notation": king_square.occupying_piece.notation if king_square.occupying_piece else None,
+                                "end": move,
+                                "next_pos": move.pos,
+                                "next_piece_color": color_code[move.occupying_piece.color] if move.occupying_piece else None,
+                                "next_piece_notation": move.occupying_piece.notation if move.occupying_piece else None,
+                                "can_capture":can_capture,
+                                "points": points
+                            })
+
+            print("safe moves:", [(move["curr_pos"], move["next_pos"]) for move in safe_moves])
+
+            return safe_moves
+
+    def exit_check_with_piece_move(self,
+                                        board: SimulationBoard,
+                                        color,
+                                        threat_piece: SimulationSquare):
+    
+        # TODO: This method is incomplete because Defense List is returned as empty
+
+        threat_moves = threat_piece.occupying_piece.get_valid_moves(board)
+
+        # print(threat_piece.occupying_piece.notation)
+        # print("threat_moves:" , [(threat_piece.occupying_piece.pos, move.pos) for move in threat_moves])
+
+        defense_moves = []
+        all_possible_moves = []
+        for square in board.squares:
+            if square.occupying_piece is not None:
+                if square.occupying_piece.notation != ' ' and \
+                    square.occupying_piece.notation != "K" and \
+                        square.occupying_piece.color == color:
+                    all_possible_moves.extend(square.occupying_piece.get_valid_moves(board))
+        
+        for defense in defense_moves:
+            if defense in threat_moves:
+                defense_moves.append(defense)    
+
+        # print("defense moves:", [(move["curr_pos"], move["next_pos"]) for move in defense_moves])
+
+        return defense_moves

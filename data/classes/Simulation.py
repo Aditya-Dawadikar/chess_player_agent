@@ -321,3 +321,12 @@ class SimulationBoard:
         
         # Check if the piece on the square is an enemy
         return square.occupying_piece.color != color
+    
+        
+    def get_square_from_pos(self, pos: tuple[float, float]) -> SimulationSquare:
+        for square in self.squares:
+            if (square.x, square.y) == (pos[0], pos[1]):
+                return square
+
+    def get_piece_from_pos(self, pos: tuple[float, float]) -> SimulationPiece:
+        return self.get_square_from_pos(pos).occupying_piece

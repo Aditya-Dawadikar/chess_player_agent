@@ -1,3 +1,10 @@
+"""
+    Simulation.py
+    ------------------------------------------
+    Contains logic for copying board for Simulation
+    and translating it back to Game Board.
+"""
+
 from typing import Literal, List, Tuple
 from data.classes.Board import Board
 

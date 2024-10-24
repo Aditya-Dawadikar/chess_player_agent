@@ -124,7 +124,7 @@ def visualize_data(aggregate:dict):
     matches_p2 = list(range(1, len(avg_captures_per_turn_p2) + 1))
 
     # Create subplots
-    fig, axs = plt.subplots(2,3, figsize=(12, 8))
+    fig, axs = plt.subplots(2,3, figsize=(15, 8))
 
     # Plot Win/lose/draw counts
     axs[0, 0].bar(['P1 Wins', 'P2 Wins', 'Draws'], 
@@ -169,3 +169,6 @@ def visualize_data(aggregate:dict):
     # Adjust layout to prevent overlap
     plt.tight_layout()
     plt.show()
+
+# aggregate = aggregate_data("results/minimax_vs_random/")
+# visualize_data(aggregate)

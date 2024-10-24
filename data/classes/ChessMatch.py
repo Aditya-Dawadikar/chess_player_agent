@@ -40,10 +40,23 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
     p1_points, p2_points = 0,0
     game_end_status: str = ""
 
+    white_player_time_log = []
+    black_player_time_log = []
+
     while running:
         print(f"Current Turn: {board.turn}")  # Debug: Show current turn
+        
+        time_start = time.time()
         chosen_action = agents[i].choose_action(board)
+        time_end = time.time()
 
+        time_delta = time_end - time_start
+        print("time_elapsed: ", time_delta)
+
+        if board.turn == 'white':
+            white_player_time_log.append(time_delta)
+        else:
+            black_player_time_log.append(time_delta)
 
         if chosen_action is False:
             print('Players draw!')
@@ -116,7 +129,9 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
         "p2_capture_count": p2_capture_count,
         "p1_move_count": p1_move_count,
         "p2_move_count": p2_move_count,
-        "game_end_status": game_end_status
+        "game_end_status": game_end_status,
+        "p1_time_log": white_player_time_log,
+        "p2_time_log": black_player_time_log
         # TODO: We can add move sequence to the outcome for both players
     }
     return outcome

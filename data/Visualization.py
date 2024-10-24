@@ -39,6 +39,8 @@ def aggregate_data(directory: str):
     p2_points = 0
     p1_capture_count = 0
     p2_capture_count = 0
+    p1_time_log = []
+    p2_time_log = []
 
     total_matches = len(all_results)
 
@@ -52,6 +54,7 @@ def aggregate_data(directory: str):
             p1_captures_per_match.append(outcome["p1_capture_count"])
             avg_captures_per_turn_p1.append(outcome["p1_capture_count"]/outcome["p1_move_count"])
             avg_points_per_turn_p1.append(outcome["p1_points"]/outcome["p1_move_count"])
+            p1_time_log.append(outcome["p1_time_log"])
         elif outcome["winner"] == 'B':
             p2_win_count += 1
             p1_lose_count += 1
@@ -61,6 +64,7 @@ def aggregate_data(directory: str):
             p2_captures_per_match.append(outcome["p2_capture_count"])
             avg_captures_per_turn_p2.append(outcome["p2_capture_count"]/outcome["p2_move_count"])
             avg_points_per_turn_p2.append(outcome["p2_points"]/outcome["p2_move_count"])
+            p2_time_log.append(outcome["p2_time_log"])
         elif outcome["winner"] is None or outcome["is_draw"] is True:
             draw_count += 1
 
@@ -86,6 +90,8 @@ def aggregate_data(directory: str):
     aggregate["avg_points_per_match_p2"] = p2_points/total_matches
     aggregate["avg_captures_per_match_p1"] = p1_capture_count/total_matches
     aggregate["avg_captures_per_match_p2"] = p2_capture_count/total_matches
+    aggregate["p1_time_log"] = p1_time_log
+    aggregate["p2_time_log"] = p2_time_log
 
     for key,value in aggregate.items():
         print(key,value)
@@ -118,6 +124,9 @@ def visualize_data(aggregate:dict):
     avg_points_per_match_p2= aggregate["avg_points_per_match_p2"]
     avg_captures_per_match_p1=aggregate["avg_captures_per_match_p1"]
     avg_captures_per_match_p2=aggregate["avg_captures_per_match_p2"]
+    p1_time_log = aggregate["p1_time_log"]
+    p2_time_log = aggregate["p2_time_log"]
+
 
     # Derived data
     matches_p1 = list(range(1, len(avg_captures_per_turn_p1) + 1))

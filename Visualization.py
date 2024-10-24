@@ -57,7 +57,7 @@ def aggregate_data(directory: str):
                                             outcome["p1_move_count"])
             avg_points_per_turn_p1.append(outcome["p1_points"] /
                                           outcome["p1_move_count"])
-            p1_time_log.append(outcome["p1_time_log"])
+            p1_time_log.append(outcome.get("p1_time_log",None))
         elif outcome["winner"] == 'B':
             p2_win_count += 1
             p1_lose_count += 1
@@ -69,7 +69,7 @@ def aggregate_data(directory: str):
                                             outcome["p2_move_count"])
             avg_points_per_turn_p2.append(outcome["p2_points"] /
                                           outcome["p2_move_count"])
-            p2_time_log.append(outcome["p2_time_log"])
+            p2_time_log.append(outcome.get("p2_time_log",None))
         elif outcome["winner"] is None or outcome["is_draw"] is True:
             draw_count += 1
 
@@ -130,8 +130,8 @@ def visualize_data(aggregate: dict):
     avg_points_per_match_p2 = aggregate["avg_points_per_match_p2"]
     avg_captures_per_match_p1 = aggregate["avg_captures_per_match_p1"]
     avg_captures_per_match_p2 = aggregate["avg_captures_per_match_p2"]
-    p1_time_log = aggregate["p1_time_log"]
-    p2_time_log = aggregate["p2_time_log"]
+    p1_time_log = aggregate.get("p1_time_log",None)
+    p2_time_log = aggregate.get("p2_time_log",None)
 
     # Derived data
     matches_p1 = list(range(1, len(avg_captures_per_turn_p1) + 1))
@@ -213,5 +213,8 @@ def visualize_data(aggregate: dict):
     plt.show()
 
 
-aggregate = aggregate_data("./data/results/minimax_vs_minimax/")
-visualize_data(aggregate)
+aggregate_1 = aggregate_data("./data/results/minimax_vs_minimax/")
+aggregate_2 = aggregate_data("./data/results/minimax_vs_random/")
+
+visualize_data(aggregate_1)
+visualize_data(aggregate_2)

@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from data.classes.Board import Board
     from data.classes.Square import Square
 
+
 class Piece:
+
     def __init__(self, pos: tuple[int, int], color: Literal['white', 'black'],
                  board: Board):
         self.pos = pos
@@ -21,7 +23,7 @@ class Piece:
 
     def get_possible_moves(self) -> list[list[Square]]:
         # Must be implemented by child classes
-        assert(False)
+        assert (False)
 
     def get_moves(self, board: Board) -> list[Square]:
         output: list[Square] = []
@@ -42,11 +44,12 @@ class Piece:
     def get_valid_moves(self, board: Board) -> list[Square]:
         output: list[Square] = []
         for square in self.get_moves(board):
-            if not board.is_in_check(self.color, board_change=[self.pos, square.pos]):
+            if not board.is_in_check(self.color,
+                                     board_change=[self.pos, square.pos]):
                 output.append(square)
         return output
 
-    def move(self, board: Board, square: Square, force: bool=False) -> bool:
+    def move(self, board: Board, square: Square, force: bool = False) -> bool:
         if (square is None):
             return False
         for i in board.squares:
@@ -62,19 +65,20 @@ class Piece:
             if self.notation == ' ':
                 if self.y == 0 or self.y == 7:
                     from data.classes.pieces.Queen import Queen
-                    square.occupying_piece = Queen(
-                        (self.x, self.y),
-                        self.color,
-                        board
-                    )
+                    square.occupying_piece = Queen((self.x, self.y),
+                                                   self.color, board)
             # Move rook if king castles
             if self.notation == 'K':
                 if prev_square.x - self.x == 2:
                     rook = board.get_piece_from_pos((0, self.y))
-                    rook.move(board, board.get_square_from_pos((3, self.y)), force=True)
+                    rook.move(board,
+                              board.get_square_from_pos((3, self.y)),
+                              force=True)
                 elif prev_square.x - self.x == -2:
                     rook = board.get_piece_from_pos((7, self.y))
-                    rook.move(board, board.get_square_from_pos((5, self.y)), force=True)
+                    rook.move(board,
+                              board.get_square_from_pos((5, self.y)),
+                              force=True)
             return True
         else:
             board.selected_square = None

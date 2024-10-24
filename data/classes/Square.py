@@ -7,11 +7,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from data.classes.Piece import Piece
 
+
 # Tile creator
 class Square:
+
     def __init__(self, x: int, y: int, width: float, height: float):
         self.x = x
-        self.y  = y
+        self.y = y
         self.width = width
         self.height = height
         self.abs_x = x * width
@@ -19,17 +21,16 @@ class Square:
         self.abs_pos = (self.abs_x, self.abs_y)
         self.pos = (x, y)
         self.color = 'light' if (x + y) % 2 == 0 else 'dark'
-        self.draw_color = (255, 180, 140) if self.color == 'light' else (180, 140, 255)
-        self.highlight_color = (180, 255, 100) if self.color == 'light' else (140, 200, 80)
+        self.draw_color = (255, 180,
+                           140) if self.color == 'light' else (180, 140, 255)
+        self.highlight_color = (180, 255,
+                                100) if self.color == 'light' else (140, 200,
+                                                                    80)
         self.occupying_piece: Piece = None
         self.coord = self.get_coord()
         self.highlight = False
-        self.rect = pygame.Rect(
-            self.abs_x,
-            self.abs_y,
-            self.width,
-            self.height
-        )
+        self.rect = pygame.Rect(self.abs_x, self.abs_y, self.width,
+                                self.height)
 
     # get the formal notation of the tile
     def get_coord(self) -> str:

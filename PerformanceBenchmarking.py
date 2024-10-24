@@ -11,24 +11,14 @@ from data.classes.Board import Board
 from data.classes.agents.ChessAgent import ChessAgent
 from data.classes.agents.MiniMaxPlayer import MinimaxPlayer
 
-color_code = {
-            "black": "b",
-            "white": "w"
-        }
+color_code = {"black": "b", "white": "w"}
 
-point_map = {
-            " ": 0,
-            "P": 1,
-            "N": 3,
-            "B": 3,
-            "R": 5,
-            "Q": 9,
-            "K": "20"
-        }
+point_map = {" ": 0, "P": 1, "N": 3, "B": 3, "R": 5, "Q": 9, "K": "20"}
+
 
 def chess_match(white_player: ChessAgent, black_player: ChessAgent):
-    assert(white_player.color == 'white')
-    assert(black_player.color == 'black')
+    assert (white_player.color == 'white')
+    assert (black_player.color == 'black')
     pygame.init()
     WINDOW_SIZE = (600, 600)
     screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -43,9 +33,9 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
     # Outcome
     winner = None
     is_draw = False
-    p1_move_count, p2_move_count = 0,0
-    p1_capture_count, p2_capture_count = 0,0
-    p1_points, p2_points = 0,0
+    p1_move_count, p2_move_count = 0, 0
+    p1_capture_count, p2_capture_count = 0, 0
+    p1_points, p2_points = 0, 0
     game_end_status: str = ""
 
     white_player_time_log = []
@@ -58,8 +48,8 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
         time_end = time.time()
 
         # time_delta in seconds
-        time_delta = time_end-time_start
-        print("time_elapsed: ",time_delta)
+        time_delta = time_end - time_start
+        print("time_elapsed: ", time_delta)
 
         if board.turn == 'white':
             white_player_time_log.append(time_delta)
@@ -75,15 +65,16 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
             running = False
             game_end_status = "MORE_THAN_100_MOVES"
         else:
-            print("Chosen action:", chosen_action[0].pos, chosen_action[1].pos)  # Debug: Show chosen action
-            
+            print("Chosen action:", chosen_action[0].pos,
+                  chosen_action[1].pos)  # Debug: Show chosen action
+
             # Check if the move is valid before applying it
             if board.handle_move(chosen_action[0], chosen_action[1]):
 
                 if board.turn == 'white':
                     if chosen_action[2] > 0:
                         # captured a piece
-                        p1_capture_count +=1
+                        p1_capture_count += 1
                         p1_points += chosen_action[2]
 
                     p1_move_count += 1
@@ -144,6 +135,7 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
     }
     return outcome
 
+
 def visualize_performance(y1=[], y2=[]):
     """
     Plots both the original and smooth curves for the given x, y1, and y2 values.
@@ -155,16 +147,17 @@ def visualize_performance(y1=[], y2=[]):
     """
 
     if len(y1) > len(y2):
-        for i in range(len(y1)-len(y2)):
+        for i in range(len(y1) - len(y2)):
             y2.append(0)
     elif len(y2) > len(y1):
-        for i in range(len(y2)-len(y1)):
+        for i in range(len(y2) - len(y1)):
             y1.append(0)
 
     x = [i for i in range(len(y1))]
 
     # Create smooth curves for both lines
-    x_new = np.linspace(min(x), max(x), 300)  # Generate more x values for a smoother curve
+    x_new = np.linspace(min(x), max(x),
+                        300)  # Generate more x values for a smoother curve
 
     # Apply smoothing using cubic splines
     spl_y1 = make_interp_spline(x, y1, k=3)
@@ -178,8 +171,16 @@ def visualize_performance(y1=[], y2=[]):
     plt.plot(x, y2, 'o--', label='Line 2 (original)', color='green')
 
     # Plot the smoothed curves
-    plt.plot(x_new, smooth_y1, label='Line 1 (smoothed)', color='blue', alpha=0.6)
-    plt.plot(x_new, smooth_y2, label='Line 2 (smoothed)', color='green', alpha=0.6)
+    plt.plot(x_new,
+             smooth_y1,
+             label='Line 1 (smoothed)',
+             color='blue',
+             alpha=0.6)
+    plt.plot(x_new,
+             smooth_y2,
+             label='Line 2 (smoothed)',
+             color='green',
+             alpha=0.6)
 
     # Add labels and legend
     plt.xlabel('Move')
@@ -190,16 +191,20 @@ def visualize_performance(y1=[], y2=[]):
     # Show the plot
     plt.show()
 
+
 def evaluate_performance():
     outcome = chess_match(MinimaxPlayer('white'), MinimaxPlayer('black'))
     print(outcome)
 
-    p1_avg_decision_time = sum(outcome["p1_time_log"])/len(outcome["p1_time_log"])
-    p2_avg_decision_time = sum(outcome["p2_time_log"])/len(outcome["p2_time_log"])
+    p1_avg_decision_time = sum(outcome["p1_time_log"]) / len(
+        outcome["p1_time_log"])
+    p2_avg_decision_time = sum(outcome["p2_time_log"]) / len(
+        outcome["p2_time_log"])
 
     print("Avg P1 decision time: ", p1_avg_decision_time)
     print("Avg P2 decision time: ", p2_avg_decision_time)
 
     visualize_performance(outcome["p1_time_log"], outcome["p2_time_log"])
+
 
 evaluate_performance()

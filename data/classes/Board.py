@@ -12,9 +12,12 @@ from data.classes.pieces.Queen import Queen
 from data.classes.pieces.King import King
 from data.classes.pieces.Pawn import Pawn
 
+
 # Game state checker
 class Board:
-    def __init__(self, display: pygame.surface.Surface, width: float, height: float):
+
+    def __init__(self, display: pygame.surface.Surface, width: float,
+                 height: float):
         self.display = display
         self.width = width
         self.height = height
@@ -25,10 +28,10 @@ class Board:
         self.config = [
             ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
             ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
-            ['','','','','','','',''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
             ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
             ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR'],
         ]
@@ -39,9 +42,7 @@ class Board:
         output: list[Square] = []
         for y in range(8):
             for x in range(8):
-                output.append(
-                    Square(x,  y, self.tile_width, self.tile_height)
-                )
+                output.append(Square(x, y, self.tile_width, self.tile_height))
         return output
 
     def get_square_from_pos(self, pos: tuple[float, float]) -> Square:
@@ -65,42 +66,44 @@ class Board:
                     # looking inside contents, what piece does it have
                     if piece[1] == 'R':
                         square.occupying_piece = Rook(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
                     # as you notice above, we put `self` as argument, or means our class Board
                     elif piece[1] == 'N':
                         square.occupying_piece = Knight(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
                     elif piece[1] == 'B':
                         square.occupying_piece = Bishop(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
                     elif piece[1] == 'Q':
                         square.occupying_piece = Queen(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
                     elif piece[1] == 'K':
                         square.occupying_piece = King(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
                     elif piece[1] == 'P':
                         square.occupying_piece = Pawn(
-                            (x, y), 'white' if piece[0] == 'w' else 'black', self
-                        )
+                            (x, y), 'white' if piece[0] == 'w' else 'black',
+                            self)
 
     def handle_move(self, from_square: Square, to_square: Square) -> bool:
         if from_square.occupying_piece is not None:
             if from_square.occupying_piece.move(self, to_square):
                 self.turn = 'white' if self.turn == 'black' else 'black'
                 return True
-        
+
         return False
 
     # check state checker
-    def is_in_check(self, color: Literal['white', 'black'],
-                    board_change: tuple[tuple[int, int],
-                                        tuple[int, int]]=None) -> bool:
+    def is_in_check(
+            self,
+            color: Literal['white', 'black'],
+            board_change: tuple[tuple[int, int], tuple[int,
+                                                       int]] = None) -> bool:
         # board_change = [(x1, y1), (x2, y2)]
         output = False
         king_pos: tuple[int, int] = None
@@ -120,7 +123,8 @@ class Board:
                     new_square_old_piece = new_square.occupying_piece
                     new_square.occupying_piece = changing_piece
         pieces = [
-            i.occupying_piece for i in self.squares if i.occupying_piece is not None
+            i.occupying_piece for i in self.squares
+            if i.occupying_piece is not None
         ]
         if changing_piece is not None:
             if changing_piece.notation == 'K':
@@ -128,7 +132,7 @@ class Board:
         if king_pos == None:
             for piece in pieces:
                 if piece.notation == 'K' and piece.color == color:
-                        king_pos = piece.pos
+                    king_pos = piece.pos
         for piece in pieces:
             if piece.color != color:
                 for square in piece.attacking_squares(self):
@@ -155,7 +159,8 @@ class Board:
         display.fill('white')
         if self.selected_square is not None:
             self.selected_square.highlight = True
-            for square in self.selected_square.occupying_piece.get_valid_moves(self):
+            for square in self.selected_square.occupying_piece.get_valid_moves(
+                    self):
                 square.highlight = True
         for square in self.squares:
             square.draw(display)

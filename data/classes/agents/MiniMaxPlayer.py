@@ -18,7 +18,7 @@ point_map = {
             "B": 3,
             "R": 5,
             "Q": 9,
-            "K": "INF"
+            "K": 20
         }
 
 class MinimaxPlayer(ChessAgent):
@@ -46,13 +46,13 @@ class MinimaxPlayer(ChessAgent):
                                       maximizing_player=False)
             if move_value > best_value:
                 best_value = move_value
-                best_move = (move['start'], move['end'])
+                best_move = (move['start'], move['end'], move["points"])
         
         # Convert the best move's SimulationSquare to Square before returning
         if best_move:
             start_square = self.translate_simulation_square_to_square(best_move[0], board)
             end_square = self.translate_simulation_square_to_square(best_move[1], board)
-            return (start_square, end_square)
+            return (start_square, end_square, best_move[2])
 
         return False
 
@@ -300,7 +300,7 @@ class MinimaxPlayer(ChessAgent):
                                 "points": points
                             })
 
-            print("safe moves:", [(move["curr_pos"], move["next_pos"]) for move in safe_moves])
+            # print("safe moves:", [(move["curr_pos"], move["next_pos"]) for move in safe_moves])
 
             return safe_moves
 

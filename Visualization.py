@@ -179,5 +179,5 @@ def visualize_data(aggregate:dict):
     plt.tight_layout()
     plt.show()
 
-# aggregate = aggregate_data("results/minimax_vs_random/")
-# visualize_data(aggregate)
+aggregate = aggregate_data("./data/results/minimax_vs_minimax/")
+visualize_data(aggregate)

@@ -144,7 +144,7 @@ def chess_match(white_player: ChessAgent, black_player: ChessAgent):
     }
     return outcome
 
-def visualize_performance(y1, y2):
+def visualize_performance(y1=[], y2=[]):
     """
     Plots both the original and smooth curves for the given x, y1, and y2 values.
 
@@ -154,7 +154,14 @@ def visualize_performance(y1, y2):
     y2 (list): Y-axis values for the second line.
     """
 
-    x = [i for i in range(max(len(y1), len(y2)))]
+    if len(y1) > len(y2):
+        for i in range(len(y1)-len(y2)):
+            y2.append(0)
+    elif len(y2) > len(y1):
+        for i in range(len(y2)-len(y1)):
+            y1.append(0)
+
+    x = [i for i in range(len(y1))]
 
     # Create smooth curves for both lines
     x_new = np.linspace(min(x), max(x), 300)  # Generate more x values for a smoother curve

@@ -6,7 +6,7 @@ from data.classes.agents.MiniMaxPlayer import MinimaxPlayer
 from data.classes.agents.RandomPlayer import RandomPlayer
 
 def run_match():
-    outcome = chess_match(MinimaxPlayer('white'), RandomPlayer('black'))
+    outcome = chess_match(MinimaxPlayer('white'), MinimaxPlayer('black'))
     return outcome
 
 def run_simulation(iterations:int=5):

@@ -107,6 +107,15 @@ Limitations regarding the Check and CheckMate situations are present in both age
 
 There are about 100 simulations for Minimax vs Minimax Agent, we choose a random sample of 9 where the move_count is more than 20 for white players.
 
+**Random Sample 1**
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/data/results/Visualization/performance_01.png)
+
+**Random Sample 2**
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/data/results/Visualization/performance_02.png)
+
+**Random Sample 3**
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/data/results/Visualization/performance_03.png)
+
 The general trend shows that the time required to evaluate the moves is very low in the beginning, then this exponentially increases as the game progresses, then it shows a gradual decrease.
 
 Explanation:

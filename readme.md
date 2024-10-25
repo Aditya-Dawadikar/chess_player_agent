@@ -84,6 +84,8 @@ Base implementation uses a **PyGame** board described as **Board.py**. Using the
 ### Minimax Vs Random Agent
 In this simulation, the White Player was the Minimax Agent and Black Player was the Random Agent. Total of 100 matches were played.
 
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/data/results/Visualization/Minimax_vs_Random.png)
+
 #### Analysis
 It turns out that the Random Agent has higher win rate as compared to the Minimax Agent.
 
@@ -93,6 +95,8 @@ A possible explanations:
 
 ### Minimax Vs Minimax Agent
 In this simulation, both the White and Black Players are Minimax Agents. Total of 100 matches were played.
+
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/data/results/Visualization/Minimax_vs_Minimax.png)
 
 #### Analysis
 It is evident that both White and Black Players have similar capabilities hence the number of Draws are high. Although the White Player seems to have an upper hand in winning games because of having the first move advantage.

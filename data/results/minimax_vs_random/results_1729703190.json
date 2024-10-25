@@ -1,0 +1,57 @@
+[
+  {
+    "winner": "B",
+    "is_draw": false,
+    "p1_points": 3,
+    "p2_points": 19,
+    "p1_capture_count": 1,
+    "p2_capture_count": 5,
+    "p1_move_count": 19,
+    "p2_move_count": 19,
+    "game_end_status": "INVALID_MOVE_BUG"
+  },
+  {
+    "winner": "W",
+    "is_draw": false,
+    "p1_points": 11,
+    "p2_points": 38,
+    "p1_capture_count": 5,
+    "p2_capture_count": 14,
+    "p1_move_count": 48,
+    "p2_move_count": 49,
+    "game_end_status": "CHECK_MATE"
+  },
+  {
+    "winner": "W",
+    "is_draw": false,
+    "p1_points": 9,
+    "p2_points": 6,
+    "p1_capture_count": 1,
+    "p2_capture_count": 2,
+    "p1_move_count": 11,
+    "p2_move_count": 11,
+    "game_end_status": "INVALID_MOVE_BUG"
+  },
+  {
+    "winner": "W",
+    "is_draw": false,
+    "p1_points": 6,
+    "p2_points": 2,
+    "p1_capture_count": 2,
+    "p2_capture_count": 2,
+    "p1_move_count": 14,
+    "p2_move_count": 14,
+    "game_end_status": "INVALID_MOVE_BUG"
+  },
+  {
+    "winner": "B",
+    "is_draw": false,
+    "p1_points": 9,
+    "p2_points": 24,
+    "p1_capture_count": 3,
+    "p2_capture_count": 6,
+    "p1_move_count": 33,
+    "p2_move_count": 33,
+    "game_end_status": "INVALID_MOVE_BUG"
+  }
+]

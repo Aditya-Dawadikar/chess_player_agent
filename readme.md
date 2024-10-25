@@ -79,6 +79,8 @@ All simulations are executed with a max depth of 3. The Agents may perform bette
 
 Base implementation uses a **PyGame** board described as **Board.py**. Using the same board running simulation slows down the program. Additionally when the board is being evaluated, we do not need graphic representation of the moves, hence I implemented a lightweight board **SimulationBoard**. This is equivalent to the Board class, except there is no PyGame graphics code. All the moves are taken on a 2D matrix based representation of the game board, where each piece is denoted as a string.
 
+![img](https://github.com/Aditya-Dawadikar/chess_player_agent/blob/master/Architecture.drawio.png)
+
 ## Performance Evaluation
 
 ### Minimax Vs Random Agent
